@@ -79,19 +79,20 @@ class AddArtistVC: UIViewController {
     @objc func setDateOfBirt() {
         let vc = UIViewController()
         vc.preferredContentSize = CGSize(width: 250, height: 50)
-        let picetView = UIDatePicker(frame: CGRect(x: 0, y: 0, width: 250, height: 50))
-        picetView.datePickerMode = .date
-        vc.view.addSubview(picetView)
+        let pickerView = UIDatePicker(frame: CGRect(x: 0, y: 0, width: 250, height: 50))
+        pickerView.datePickerMode = .date
+        pickerView.locale = Locale(identifier: "ru_RU")
+        vc.view.addSubview(pickerView)
         
-        picetView.snp.makeConstraints { make in
+        pickerView.snp.makeConstraints { make in
             make.center.equalTo(vc.view.snp.center)
         }
         
-        picetView.addTarget(self, action: #selector(updateDateOfBithd(sender: )), for: .valueChanged)
+        pickerView.addTarget(self, action: #selector(updateDateOfBithd(sender: )), for: .valueChanged)
         let dataAlert = UIAlertController(title: "Укажите дату рождения", message: "", preferredStyle: .alert)
         dataAlert.setValue(vc, forKey: "contentViewController")
         dataAlert.addAction(UIAlertAction(title: "Готово", style: .default))
-        updateDateOfBithd(sender: picetView)
+        updateDateOfBithd(sender: pickerView)
         present(dataAlert, animated: true)
     }
     
