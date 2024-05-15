@@ -127,7 +127,7 @@ class AddArtistVC: UIViewController {
     }
     
     @objc func save() {
-            if nameTextField.hasText && lastNameTextField.hasText  {
+            if nameTextField.hasText && lastNameTextField.hasText && dateOfBirthLabel.text != "дд-мм-гггг"  {
             let formatter = DateFormatter()
             formatter.dateFormat = "dd-MM-yyyy"
             artist?.name = nameTextField.text
