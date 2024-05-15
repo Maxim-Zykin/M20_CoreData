@@ -70,6 +70,7 @@ class ViewController: UITableViewController {
     @objc func addArtist() {
         let newArtist = AddArtistVC()
         newArtist.artist = Artist.init(entity: NSEntityDescription.entity(forEntityName: "Artist", in: persistentController.viewContext)!, insertInto: persistentController.viewContext)
+        //navigationController?.pushViewController(newArtist, animated: true)
         present(newArtist,animated: true)
     }
     

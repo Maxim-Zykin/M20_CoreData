@@ -7,8 +7,11 @@
 
 import UIKit
 import SnapKit
+import CoreData
 
 class AddArtistVC: UIViewController {
+    
+    private let persistentController = NSPersistentContainer(name: "M20")
     
     var artist: Artist?
     
@@ -72,14 +75,16 @@ class AddArtistVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        if let artist = artist {
-            nameTextField.text = artist.name
-            lastNameTextField.text = artist.lastName
+        if (artist != nil) {
+            nameTextField.text = artist?.name
+            lastNameTextField.text = artist?.lastName
             let formatter = DateFormatter()
             formatter.dateFormat = "dd-MM-yyyy"
-            dateOfBirthLabel.text = formatter.string(from: artist.dateOfBith ?? Date.now)
-            countryLabel.text = artist.country ?? "Страна"
+            dateOfBirthLabel.text = formatter.string(from: artist?.dateOfBith ?? Date.now)
+            countryLabel.text = artist?.country
         }
+        
+        presentationController?.delegate = self
     }
     
     @objc func setDateOfBirt() {
@@ -122,7 +127,7 @@ class AddArtistVC: UIViewController {
     }
     
     @objc func save() {
-        if nameTextField.hasText && lastNameTextField.hasText && dateOfBirthLabel.text != "дд-мм-гггг" {
+            if nameTextField.hasText && lastNameTextField.hasText  {
             let formatter = DateFormatter()
             formatter.dateFormat = "dd-MM-yyyy"
             artist?.name = nameTextField.text
@@ -187,9 +192,7 @@ class AddArtistVC: UIViewController {
             make.left.equalTo(view.snp.leftMargin).offset(20)
             make.right.equalTo(view.snp.rightMargin).offset(-20)
         }
-
     }
-    
 }
 
 
@@ -212,4 +215,13 @@ extension AddArtistVC: UIPickerViewDelegate, UIPickerViewDataSource{
         let countries = Countries().countries
         self.countryLabel.text = countries[row]
     }
+}
+
+extension AddArtistVC: UIAdaptivePresentationControllerDelegate {
+    
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        print("Пока")
+        
+    }
+    
 }

@@ -53,7 +53,7 @@ class ArtistCell: UITableViewCell {
         countryLabel.text = model.country
         let formatter = DateFormatter()
         formatter.dateFormat = "dd-MM-yyyy"
-        dateOfBithdLabel.text = formatter.string(from: model.dateOfBith ?? Date())
+        dateOfBithdLabel.text = formatter.string(for: (model.dateOfBith) )
     }
     
     func setupUI() {
