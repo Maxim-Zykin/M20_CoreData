@@ -10,7 +10,7 @@ import SnapKit
 
 class AddArtistVC: UIViewController {
     
-    var artist:  Artist?
+    var artist: Artist?
     
     private var nameTextField: UITextField = {
         let textField = UITextField()
@@ -45,7 +45,6 @@ class AddArtistVC: UIViewController {
     
     private var countryLabel: UILabel = {
         let label = UILabel()
-        label.text = "Страна"
         label.textAlignment = .center
         return label
     }()
@@ -62,7 +61,7 @@ class AddArtistVC: UIViewController {
     
     private lazy var saveButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Добавить", for: .normal)
+        button.setTitle("Сохранить", for: .normal)
         button.tintColor = .white
         button.backgroundColor = .systemGreen
         button.layer.cornerRadius = 10
@@ -73,8 +72,15 @@ class AddArtistVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        if let artist = artist {
+            nameTextField.text = artist.name
+            lastNameTextField.text = artist.lastName
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd-MM-yyyy"
+            dateOfBirthLabel.text = formatter.string(from: artist.dateOfBith ?? Date.now)
+            countryLabel.text = artist.country ?? "Страна"
+        }
     }
-    
     
     @objc func setDateOfBirt() {
         let vc = UIViewController()
@@ -181,50 +187,7 @@ class AddArtistVC: UIViewController {
             make.left.equalTo(view.snp.leftMargin).offset(20)
             make.right.equalTo(view.snp.rightMargin).offset(-20)
         }
-        
-//        nameTextField.snp.makeConstraints { make in
-//            make.top.equalTo(view.snp.topMargin).offset(20)
-//            make.left.equalTo(view.snp.leftMargin).offset(20)
-//            make.right.equalTo(view.snp.rightMargin).offset(-20)
-//        }
-//        
-//        lastNameTextField.snp.makeConstraints { make in
-//            make.top.equalTo(nameTextField.snp.bottom).offset(10)
-//            make.left.equalTo(view.snp.leftMargin).offset(20)
-//            make.right.equalTo(view.snp.rightMargin).offset(-20)
-//        }
-//        
-//        dateOfBirthLabel.snp.makeConstraints { make in
-//            make.top.equalTo(lastNameTextField.snp.bottom).offset(10)
-//            make.left.equalTo(view.snp.leftMargin).offset(20)
-//            make.right.equalTo(view.snp.centerX)
-//            make.centerX.equalTo(setDateOfBirtButton.snp.centerY)
-//        }
-//        
-//        setDateOfBirtButton.snp.makeConstraints { make in
-//            make.top.equalTo(lastNameTextField.snp.bottom).offset(10)
-//            make.left.equalTo(view.snp.centerX)
-//            make.right.equalTo(view.snp.rightMargin).offset(-20)
-//        }
-//        
-//        countryLabel.snp.makeConstraints { make in
-//            make.top.equalTo(dateOfBirthLabel.snp.bottom).offset(10)
-//            make.left.equalTo(view.snp.leftMargin).offset(20)
-//            make.right.equalTo(view.snp.centerX)
-//            make.centerX.equalTo(setCountryButton.snp.centerY)
-//        }
-//        
-//        setCountryButton.snp.makeConstraints { make in
-//            make.top.equalTo(setDateOfBirtButton.snp.bottom).offset(10)
-//            make.left.equalTo(view.snp.centerX)
-//            make.right.equalTo(view.snp.rightMargin).offset(-20)
-//        }
-//        
-//        saveButton.snp.makeConstraints { make in
-//            make.center.equalTo(view.snp.center)
-//            make.left.equalTo(view.snp.leftMargin).offset(20)
-//            make.right.equalTo(view.snp.rightMargin).offset(-20)
-//        }
+
     }
     
 }

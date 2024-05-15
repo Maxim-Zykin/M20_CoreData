@@ -28,7 +28,6 @@ class ViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
         tableView.register(ArtistCell.self, forCellReuseIdentifier: cellID)
         
         setupNavigationBar()
@@ -123,6 +122,14 @@ class ViewController: UITableViewController {
             try? persistentController.viewContext.save()
         }
     }
+    
+        override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            let artist = fetchedResultController.object(at: indexPath)
+            let vc = AddArtistVC()
+            vc.artist = artist
+            present(vc,animated: true)
+            print(artist)
+        }
     
 }
 
