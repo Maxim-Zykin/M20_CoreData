@@ -54,6 +54,8 @@ class ViewController: UITableViewController {
                try?  persistentController.viewContext.save()
             }
         }
+        tableView.reloadData()
+        print("Назад")
     }
     
     private func setupNavigationBar() {
@@ -80,11 +82,12 @@ class ViewController: UITableViewController {
 
     @objc func addArtist() {
         let newArtist = AddArtistVC()
-        //Вариант 1
-//        navigationController?.pushViewController(newArtist, animated: true)
+        //Вариант 1 в AddArtistVC использовать save() для кнопки
+        newArtist.artist = Artist.init(entity: NSEntityDescription.entity(forEntityName: "Artist", in: persistentController.viewContext)!, insertInto: persistentController.viewContext)
+       navigationController?.pushViewController(newArtist, animated: true)
         
-        //Вариант 2
-        present(newArtist,animated: true)
+        //Вариант 2 в AddArtistVC использовать save1() для кнопки
+//        present(newArtist,animated: true)
         
         // Вариант 3 - изначальный
         //        newArtist.artist = Artist.init(entity: NSEntityDescription.entity(forEntityName: "Artist", in: persistentController.viewContext)!, insertInto: persistentController.viewContext)
@@ -146,7 +149,8 @@ class ViewController: UITableViewController {
             let artist = fetchedResultController.object(at: indexPath)
             let vc = AddArtistVC()
             vc.artist = artist
-            present(vc,animated: true)
+           // present(vc,animated: true)
+            navigationController?.pushViewController(vc, animated: true)
             print(artist)
         }
 

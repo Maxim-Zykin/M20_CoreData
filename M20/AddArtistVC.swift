@@ -71,7 +71,7 @@ class AddArtistVC: UIViewController {
         button.tintColor = .white
         button.backgroundColor = .systemGreen
         button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(save1), for: .touchUpInside)
+        button.addTarget(self, action: #selector(save), for: .touchUpInside)
         return button
     }()
     
@@ -140,7 +140,8 @@ class AddArtistVC: UIViewController {
             artist?.country = countryLabel.text
                 
             try? artist?.managedObjectContext?.save()
-            dismiss(animated: true)
+                navigationController?.popToRootViewController(animated: true)
+            //dismiss(animated: true)
         } else {
             let errorAlert = UIAlertController(title: "Ошибка", message: "Укажите все данные", preferredStyle: .alert)
             errorAlert.addAction(UIAlertAction(title: "OK", style: .default))
@@ -161,6 +162,7 @@ class AddArtistVC: UIViewController {
         artist.country = countryLabel.text
             try? context.save()
 
+            //navigationController?.popToRootViewController(animated: true)
         dismiss(animated: true)
         } else {
             let errorAlert = UIAlertController(title: "Ошибка", message: "Укажите все данные", preferredStyle: .alert)
