@@ -11,9 +11,11 @@ import CoreData
 
 class ViewController: UITableViewController {
     
+   static var artistNil = false
+    
     private let cellID = "cell"
     
-    private let persistentController = NSPersistentContainer(name: "M20")
+    private lazy var persistentController = NSPersistentContainer(name: "M20")
     
     private lazy var fetchedResultController: NSFetchedResultsController<Artist> = {
         let fetchRequest = Artist.fetchRequest()
@@ -45,11 +47,20 @@ class ViewController: UITableViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        for i in fetchedResultController.fetchedObjects! {
+            if i.name == nil {
+                persistentController.viewContext.delete(i)
+               try?  persistentController.viewContext.save()
+            }
+        }
+    }
+    
     private func setupNavigationBar() {
         let navApperance = UINavigationBarAppearance()
         navApperance.configureWithOpaqueBackground()
         navApperance.titleTextAttributes = [.foregroundColor: UIColor.white]
-    
+        navApperance.backgroundColor = .white
         navigationController?.navigationBar.standardAppearance = navApperance
         navigationController?.navigationBar.scrollEdgeAppearance = navApperance
         
@@ -69,9 +80,16 @@ class ViewController: UITableViewController {
 
     @objc func addArtist() {
         let newArtist = AddArtistVC()
-        newArtist.artist = Artist.init(entity: NSEntityDescription.entity(forEntityName: "Artist", in: persistentController.viewContext)!, insertInto: persistentController.viewContext)
-        //navigationController?.pushViewController(newArtist, animated: true)
+        //Вариант 1
+//        navigationController?.pushViewController(newArtist, animated: true)
+        
+        //Вариант 2
         present(newArtist,animated: true)
+        
+        // Вариант 3 - изначальный
+        //        newArtist.artist = Artist.init(entity: NSEntityDescription.entity(forEntityName: "Artist", in: persistentController.viewContext)!, insertInto: persistentController.viewContext)
+            //present(newArtist,animated: true)
+
     }
     
     @objc func sortButton() {
@@ -131,7 +149,8 @@ class ViewController: UITableViewController {
             present(vc,animated: true)
             print(artist)
         }
-    
+
+
 }
 
 extension ViewController: NSFetchedResultsControllerDelegate {

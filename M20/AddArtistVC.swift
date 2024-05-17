@@ -11,7 +11,8 @@ import CoreData
 
 class AddArtistVC: UIViewController {
     
-    private let persistentController = NSPersistentContainer(name: "M20")
+    private lazy var persistentController = NSPersistentContainer(name: "M20")
+    private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     var artist: Artist?
     
@@ -32,6 +33,7 @@ class AddArtistVC: UIViewController {
     private var dateOfBirthLabel: UILabel = {
         let label = UILabel()
         label.text = "ДД-ММ-ГГГГ"
+        label.textColor = .black
         label.textAlignment = .center
         return label
     }()
@@ -48,6 +50,7 @@ class AddArtistVC: UIViewController {
     
     private var countryLabel: UILabel = {
         let label = UILabel()
+        label.textColor = .black
         label.textAlignment = .center
         return label
     }()
@@ -68,7 +71,7 @@ class AddArtistVC: UIViewController {
         button.tintColor = .white
         button.backgroundColor = .systemGreen
         button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(save), for: .touchUpInside)
+        button.addTarget(self, action: #selector(save1), for: .touchUpInside)
         return button
     }()
     
@@ -83,9 +86,9 @@ class AddArtistVC: UIViewController {
             dateOfBirthLabel.text = formatter.string(from: artist?.dateOfBith ?? Date.now)
             countryLabel.text = artist?.country
         }
-        
-        presentationController?.delegate = self
+
     }
+    
     
     @objc func setDateOfBirt() {
         let vc = UIViewController()
@@ -126,6 +129,7 @@ class AddArtistVC: UIViewController {
         present(countryAlert, animated: true)
     }
     
+    //Вариант 1
     @objc func save() {
             if nameTextField.hasText && lastNameTextField.hasText && dateOfBirthLabel.text != "дд-мм-гггг"  {
             let formatter = DateFormatter()
@@ -134,9 +138,30 @@ class AddArtistVC: UIViewController {
             artist?.lastName = lastNameTextField.text
             artist?.dateOfBith = formatter.date(from: dateOfBirthLabel.text ?? "")
             artist?.country = countryLabel.text
-            
+                
             try? artist?.managedObjectContext?.save()
             dismiss(animated: true)
+        } else {
+            let errorAlert = UIAlertController(title: "Ошибка", message: "Укажите все данные", preferredStyle: .alert)
+            errorAlert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(errorAlert, animated: true)
+        }
+    }
+    
+   // Вариант 2
+    @objc func save1() {
+        guard let entity = NSEntityDescription.entity(forEntityName: "Artist", in: context) else {return}
+        guard let artist = NSManagedObject(entity: entity, insertInto: context) as? Artist else {return}
+        if nameTextField.hasText && lastNameTextField.hasText && dateOfBirthLabel.text != "дд-мм-гггг"  {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy"
+        artist.name = nameTextField.text
+        artist.lastName = lastNameTextField.text
+        artist.dateOfBith = formatter.date(from: dateOfBirthLabel.text ?? "")
+        artist.country = countryLabel.text
+            try? context.save()
+
+        dismiss(animated: true)
         } else {
             let errorAlert = UIAlertController(title: "Ошибка", message: "Укажите все данные", preferredStyle: .alert)
             errorAlert.addAction(UIAlertAction(title: "OK", style: .default))
@@ -217,11 +242,3 @@ extension AddArtistVC: UIPickerViewDelegate, UIPickerViewDataSource{
     }
 }
 
-extension AddArtistVC: UIAdaptivePresentationControllerDelegate {
-    
-    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        print("Пока")
-        
-    }
-    
-}

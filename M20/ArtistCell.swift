@@ -13,6 +13,7 @@ class ArtistCell: UITableViewCell {
     private let nameLabel: UILabel = {
         let lable = UILabel()
         lable.text = "Имя"
+        lable.textColor = .black
         lable.font = .systemFont(ofSize: 18, weight: .medium)
         return lable
     }()
@@ -20,6 +21,7 @@ class ArtistCell: UITableViewCell {
     private let lastNameLabel: UILabel = {
         let lable = UILabel()
         lable.text = "Фамилия"
+        lable.textColor = .black
         lable.font = .systemFont(ofSize: 18, weight: .medium)
         return lable
     }()
@@ -27,6 +29,7 @@ class ArtistCell: UITableViewCell {
     private let dateOfBithdLabel: UILabel = {
         let lable = UILabel()
         lable.text = "День рождения"
+        lable.textColor = .black
         lable.font = .systemFont(ofSize: 16, weight: .regular)
         return lable
     }()
@@ -34,12 +37,14 @@ class ArtistCell: UITableViewCell {
     private let countryLabel: UILabel = {
         let lable = UILabel()
         lable.text = "Страна"
+        lable.textColor = .black
         lable.font = .systemFont(ofSize: 16, weight: .regular)
         return lable
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = UITableViewCell.SelectionStyle.none
         setupUI()
     }
     
@@ -57,6 +62,7 @@ class ArtistCell: UITableViewCell {
     }
     
     func setupUI() {
+        contentView.backgroundColor = .white
         contentView.addSubview(nameLabel)
         contentView.addSubview(lastNameLabel)
         contentView.addSubview(dateOfBithdLabel)
