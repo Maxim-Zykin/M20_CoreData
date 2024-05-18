@@ -9,10 +9,16 @@ import UIKit
 import SnapKit
 import CoreData
 
+protocol AddArtistDelegate {
+    func saveArtist()
+}
+
 class AddArtistVC: UIViewController {
     
     private lazy var persistentController = NSPersistentContainer(name: "M20")
     private let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
+    var delegate: AddArtistDelegate!
     
     var artist: Artist?
     
@@ -71,7 +77,7 @@ class AddArtistVC: UIViewController {
         button.tintColor = .white
         button.backgroundColor = .systemGreen
         button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(save), for: .touchUpInside)
+        button.addTarget(self, action: #selector(saveDelegate), for: .touchUpInside)
         return button
     }()
     
@@ -86,7 +92,7 @@ class AddArtistVC: UIViewController {
             dateOfBirthLabel.text = formatter.string(from: artist?.dateOfBith ?? Date.now)
             countryLabel.text = artist?.country
         }
-
+        presentationController?.delegate = self
     }
     
     
@@ -129,6 +135,25 @@ class AddArtistVC: UIViewController {
         present(countryAlert, animated: true)
     }
     
+    @objc func saveDelegate() {
+        if nameTextField.hasText && lastNameTextField.hasText && dateOfBirthLabel.text != "дд-мм-гггг"  {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy"
+        artist?.name = nameTextField.text
+        artist?.lastName = lastNameTextField.text
+        artist?.dateOfBith = formatter.date(from: dateOfBirthLabel.text ?? "")
+        artist?.country = countryLabel.text
+            
+        try? artist?.managedObjectContext?.save()
+            delegate?.saveArtist()
+        dismiss(animated: true)
+    } else {
+        let errorAlert = UIAlertController(title: "Ошибка", message: "Укажите все данные", preferredStyle: .alert)
+        errorAlert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(errorAlert, animated: true)
+    }
+    }
+    
     //Вариант 1
     @objc func save() {
             if nameTextField.hasText && lastNameTextField.hasText && dateOfBirthLabel.text != "дд-мм-гггг"  {
@@ -140,8 +165,8 @@ class AddArtistVC: UIViewController {
             artist?.country = countryLabel.text
                 
             try? artist?.managedObjectContext?.save()
-                navigationController?.popToRootViewController(animated: true)
-            //dismiss(animated: true)
+            
+            dismiss(animated: true)
         } else {
             let errorAlert = UIAlertController(title: "Ошибка", message: "Укажите все данные", preferredStyle: .alert)
             errorAlert.addAction(UIAlertAction(title: "OK", style: .default))
@@ -241,6 +266,13 @@ extension AddArtistVC: UIPickerViewDelegate, UIPickerViewDataSource{
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let countries = Countries().countries
         self.countryLabel.text = countries[row]
+    }
+}
+
+extension AddArtistVC: UIAdaptivePresentationControllerDelegate {
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        print(#function)
+        delegate?.saveArtist()
     }
 }
 
