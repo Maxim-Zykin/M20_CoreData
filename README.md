@@ -1,0 +1,3 @@
+-UIKit without Storyboard
+-CoreData (NSFetchedResultsController)
+-SnapKit
