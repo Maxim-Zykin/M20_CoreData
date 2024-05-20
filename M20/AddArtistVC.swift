@@ -24,6 +24,7 @@ class AddArtistVC: UIViewController {
     
     private var nameTextField: UITextField = {
         let textField = UITextField()
+        textField.backgroundColor = .lightGray
         textField.borderStyle = .roundedRect
         textField.placeholder = "Имя"
         return textField
@@ -32,6 +33,7 @@ class AddArtistVC: UIViewController {
     private var lastNameTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
+        textField.backgroundColor = .lightGray
         textField.placeholder = "Фамилия"
         return textField
     }()
@@ -57,6 +59,7 @@ class AddArtistVC: UIViewController {
     private var countryLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
+        label.text = "Страна"
         label.textAlignment = .center
         return label
     }()
@@ -77,7 +80,7 @@ class AddArtistVC: UIViewController {
         button.tintColor = .white
         button.backgroundColor = .systemGreen
         button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(saveDelegate), for: .touchUpInside)
+        button.addTarget(self, action: #selector(save), for: .touchUpInside)
         return button
     }()
     
@@ -90,7 +93,7 @@ class AddArtistVC: UIViewController {
             let formatter = DateFormatter()
             formatter.dateFormat = "dd-MM-yyyy"
             dateOfBirthLabel.text = formatter.string(from: artist?.dateOfBith ?? Date.now)
-            countryLabel.text = artist?.country
+            countryLabel.text = artist?.country ?? "Страна"
         }
         presentationController?.delegate = self
     }
@@ -135,7 +138,7 @@ class AddArtistVC: UIViewController {
         present(countryAlert, animated: true)
     }
     
-    @objc func saveDelegate() {
+    @objc func save() {
         if nameTextField.hasText && lastNameTextField.hasText && dateOfBirthLabel.text != "дд-мм-гггг"  {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd-MM-yyyy"
@@ -146,48 +149,6 @@ class AddArtistVC: UIViewController {
             
         try? artist?.managedObjectContext?.save()
             delegate?.saveArtist()
-        dismiss(animated: true)
-    } else {
-        let errorAlert = UIAlertController(title: "Ошибка", message: "Укажите все данные", preferredStyle: .alert)
-        errorAlert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(errorAlert, animated: true)
-    }
-    }
-    
-    //Вариант 1
-    @objc func save() {
-            if nameTextField.hasText && lastNameTextField.hasText && dateOfBirthLabel.text != "дд-мм-гггг"  {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "dd-MM-yyyy"
-            artist?.name = nameTextField.text
-            artist?.lastName = lastNameTextField.text
-            artist?.dateOfBith = formatter.date(from: dateOfBirthLabel.text ?? "")
-            artist?.country = countryLabel.text
-                
-            try? artist?.managedObjectContext?.save()
-            
-            dismiss(animated: true)
-        } else {
-            let errorAlert = UIAlertController(title: "Ошибка", message: "Укажите все данные", preferredStyle: .alert)
-            errorAlert.addAction(UIAlertAction(title: "OK", style: .default))
-            present(errorAlert, animated: true)
-        }
-    }
-    
-   // Вариант 2
-    @objc func save1() {
-        guard let entity = NSEntityDescription.entity(forEntityName: "Artist", in: context) else {return}
-        guard let artist = NSManagedObject(entity: entity, insertInto: context) as? Artist else {return}
-        if nameTextField.hasText && lastNameTextField.hasText && dateOfBirthLabel.text != "дд-мм-гггг"  {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd-MM-yyyy"
-        artist.name = nameTextField.text
-        artist.lastName = lastNameTextField.text
-        artist.dateOfBith = formatter.date(from: dateOfBirthLabel.text ?? "")
-        artist.country = countryLabel.text
-            try? context.save()
-
-            //navigationController?.popToRootViewController(animated: true)
         dismiss(animated: true)
         } else {
             let errorAlert = UIAlertController(title: "Ошибка", message: "Укажите все данные", preferredStyle: .alert)

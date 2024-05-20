@@ -46,18 +46,7 @@ class ViewController: UITableViewController {
             }
         }
     }
-    
-//    override func viewWillAppear(_ animated: Bool) {
-//        for i in fetchedResultController.fetchedObjects! {
-//            if i.name == nil {
-//                persistentController.viewContext.delete(i)
-//               try?  persistentController.viewContext.save()
-//            }
-//        }
-//        tableView.reloadData()
-//        print("Назад")
-//    }
-    
+
     private func setupNavigationBar() {
         let navApperance = UINavigationBarAppearance()
         navApperance.configureWithOpaqueBackground()
@@ -82,14 +71,6 @@ class ViewController: UITableViewController {
 
     @objc func addArtist() {
         let newArtist = AddArtistVC()
-//        //Вариант 1 в AddArtistVC использовать save() для кнопки
-//        newArtist.artist = Artist.init(entity: NSEntityDescription.entity(forEntityName: "Artist", in: persistentController.viewContext)!, insertInto: persistentController.viewContext)
-//       navigationController?.pushViewController(newArtist, animated: true)
-        
-        //Вариант 2 в AddArtistVC использовать save1() для кнопки
-//        present(newArtist,animated: true)
-        
-        // Вариант 3 - изначальный
         newArtist.delegate = self
         newArtist.artist = Artist.init(entity: NSEntityDescription.entity(forEntityName: "Artist", in: persistentController.viewContext)!, insertInto: persistentController.viewContext)
         present(newArtist,animated: true)
@@ -151,11 +132,8 @@ class ViewController: UITableViewController {
             let vc = AddArtistVC()
             vc.artist = artist
             present(vc,animated: true)
-//            navigationController?.pushViewController(vc, animated: true)
             print(artist)
         }
-
-
 }
 
 extension ViewController: NSFetchedResultsControllerDelegate {
@@ -197,15 +175,12 @@ extension ViewController: NSFetchedResultsControllerDelegate {
     }
 }
 
-
-
 extension ViewController: AddArtistDelegate {
     func saveArtist() {
         for i in fetchedResultController.fetchedObjects! {
             if i.name == nil {
                 persistentController.viewContext.delete(i)
-               try?  persistentController.viewContext.save()
-                print("1")
+               try? persistentController.viewContext.save()
             }
         }
         tableView.reloadData()
